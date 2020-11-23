@@ -11,48 +11,19 @@ License: GPL2
 */
 
 // ENQUEUE CUSTOM STYLES
-add_action( 'wp_enqueue_scripts', 'enqueue_custom_filter_styles');
+add_action( 'wp_enqueue_scripts', 'enqueue_custom_filter_styles', 999);
 function enqueue_custom_filter_styles() {
     wp_enqueue_style( 'slider-style', plugin_dir_url( __FILE__ ).'styles/nouislider.base.css' );
     wp_enqueue_style( 'custom-filter-style', plugin_dir_url( __FILE__ ).'/styles/styles.css' );
 
     wp_enqueue_script('slider-script',  plugin_dir_url( __FILE__ ) . 'scripts/nouislider.js', '', true);
-    wp_enqueue_script('custom-filter-script',  plugin_dir_url( __FILE__ ) . 'scripts/scripts.min.js', array('jquery'), true);
+    wp_enqueue_script('custom-filter-script',  plugin_dir_url( __FILE__ ) . 'scripts/scripts.min.js', '', true);
 }
-
 
 add_shortcode( 'vertice-custom-filter', 'vertice_custom_filter_shortcode' );
 function vertice_custom_filter_shortcode( $atts ) {
-    return 
-    '<section id="custom-filter">
-        <form id="custon-filter-form" method="POST" action="/new/filter-properties">
-            <div class="input-city">
-                <label>Cidades</label>
-                <input type="text" list="cities">
-                <datalist id="cities">
-                    <option value="Lisboa">
-                    <option value="Porto">
-                    <option value="Coimbra">
-                    <option value="Braga">
-                    <option value="Evora">
-                </datalist>
-            </div>
-
-            <div class="input-range">
-                <label>Preço</label>
-                <div id="price-range"></div>
-            </div>
-
-            <div class="input-range">
-                <label>Tamanho</label>
-                <div id="size-range"></div>
-            </div>
-
-            <input type="submit" value="filtrar" class="button-submit" />
-        </form>
-    </section>';
+    return include(plugin_dir_path( __FILE__ ) .'filter-block.php');
 }
-
 
 add_filter( 'page_template', 'vertice_custom_filter_page_template' );
 function vertice_custom_filter_page_template( $page_template )
