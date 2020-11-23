@@ -1,11 +1,7 @@
 <?php
 $bridge_qode_id = bridge_qode_get_page_id();
 $bridge_qode_sidebar = get_post_meta($bridge_qode_id, "qode_show-sidebar", true);  
-
 $bridge_qode_enable_page_comments = false;
-if(get_post_meta($bridge_qode_id, "qode_enable-page-comments", true) == 'yes') {
-	$bridge_qode_enable_page_comments = true;
-}
 
 if(get_post_meta($bridge_qode_id, "qode_page_background_color", true) != ""){
 	$bridge_qode_background_color = get_post_meta($bridge_qode_id, "qode_page_background_color", true);
@@ -53,19 +49,6 @@ else { $bridge_qode_paged = 1; }
 
               <?php include(plugin_dir_path( __FILE__ ) .'properties-block.php'); ?>
 
-							<?php 
-								$bridge_qode_args_pages = array(
-									'before'           => '<p class="single_links_pages">',
-									'after'            => '</p>',
-									'pagelink'         => '<span>%</span>'
-								);
-								wp_link_pages($bridge_qode_args_pages);
-							?>
-							<?php
-							if($bridge_qode_enable_page_comments){
-								comments_template('', true); 
-							}
-							?> 
 							<?php endwhile; ?>
 						<?php endif; ?>
 				<?php elseif($bridge_qode_sidebar == "1" || $bridge_qode_sidebar == "2"): ?>		
@@ -85,20 +68,6 @@ else { $bridge_qode_paged = 1; }
 
                 <?php include(plugin_dir_path( __FILE__ ) .'properties-block.php'); ?>
                 
-								<?php 
-									$bridge_qode_args_pages = array(
-									'before'           => '<p class="single_links_pages">',
-									'after'            => '</p>',
-									'pagelink'         => '<span>%</span>'
-									);
-
-									wp_link_pages($bridge_qode_args_pages);
-								?>
-								<?php
-								if($bridge_qode_enable_page_comments){
-									comments_template('', true); 
-								}
-								?> 
 								</div>
 						<?php endwhile; ?>
 						<?php endif; ?>
@@ -121,26 +90,14 @@ else { $bridge_qode_paged = 1; }
 									while (have_posts()) : the_post(); ?>
 									<div class="column_inner">
 										<?php the_content(); ?>
-										<?php 
-											$bridge_qode_args_pages = array(
-												'before'           => '<p class="single_links_pages">',
-												'after'            => '</p>',
-												'pagelink'         => '<span>%</span>'
-											);
-											wp_link_pages($bridge_qode_args_pages);
-										?>
-										<?php
-										if($bridge_qode_enable_page_comments){
-											comments_template('', true); 
-										}
-										?> 
+	
+                		<?php include(plugin_dir_path( __FILE__ ) .'properties-block.php'); ?>
+
 									</div>
 							<?php endwhile; ?>
 							<?php endif; ?>
-						
 										
 								</div>
-								
 							</div>
 					<?php endif; ?>
 			
