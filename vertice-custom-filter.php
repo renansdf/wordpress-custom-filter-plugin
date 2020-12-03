@@ -17,6 +17,7 @@ function enqueue_custom_filter_styles() {
     wp_enqueue_style( 'custom-filter-style', plugin_dir_url( __FILE__ ).'/styles/styles.css' );
 
     wp_enqueue_script('slider-script',  plugin_dir_url( __FILE__ ) . 'scripts/nouislider.js', '', true);
+    wp_enqueue_script('wNumb-script',  plugin_dir_url( __FILE__ ) . 'scripts/wNumb.min.js', '', true);
     wp_enqueue_script('custom-filter-script',  plugin_dir_url( __FILE__ ) . 'scripts/scripts.min.js', '', true);
 }
 
