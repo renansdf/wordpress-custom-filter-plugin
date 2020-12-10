@@ -1,4 +1,6 @@
 <?php
+
+  /// GETTING ALL VARIABLES FROM FILTER
   $city = $_POST['cities'];
   $neighborhood = $_POST['neighborhood'];
   $property_type = $_POST['property_type'];
@@ -11,20 +13,69 @@
   $size_min = $_POST['size-min'];
   $size_max = $_POST['size-max'];
 
+  if($size_max === "1000.00"){
+    $size_max = "10000000";
+  }
+
+
+  /// SETTING UP THE PRICES TO QUERY
+  $all_prices = get_terms( array(
+    'taxonomy' => 'price',
+    'hide_empty' => true,
+  ) );
+
+  foreach ($all_prices as $price) {
+    $property_price = floatval($price->name);
+    if($property_price > 100){
+      $property_price = $property_price/1000;
+    }
+
+    if($property_price >= $price_min && $property_price <= $price_max){
+      $price_range[] = number_format($property_price*1000000, 0, ',','.');
+    }
+  }
+
+
+  /// SETTING UP THE SIZES TO QUERY
+  $all_sizes = get_terms(array(
+    'taxonomy' => 'space',
+    'hide_empty' => true,
+  ) );
+
+  foreach ($all_sizes as $size) {
+    $property_size = intval($size->name);
+
+    if($property_size >= $size_min && $property_size <= $size_max){
+      $size_range[] = $property_size;
+    }
+  }
+
+
+  /// SETTING UP THE QUERY
   $args = array(
     'post_type' => 'property',
     'posts_per_page' => -1
   );
 
-  if($city){ $args['tax_query'] = array(array('taxonomy' => 'city', 'field' => 'slug', 'terms' => $city)); }
+  /// ADDING QUERY VARIABLES
+  $all_variables = array();
 
-  if($neighborhood){ $args['tax_query'] = array(array('taxonomy' => 'neighborhood', 'field' => 'slug', 'terms' => $neighborhood)); }
+  if($city){ $all_variables[] = array('taxonomy' => 'city', 'field' => 'slug', 'terms' => $city); }
 
-  if($property_type){ $args['tax_query'] = array(array('taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $property_type)); }
+  if($neighborhood){ $all_variables[] = array('taxonomy' => 'neighborhood', 'field' => 'slug', 'terms' => $neighborhood); }
 
-  if($lifestyle){ $args['tax_query'] = array(array('taxonomy' => 'lifestyle', 'field' => 'slug', 'terms' => $lifestyle)); }
+  if($property_type){ $all_variables[] = array('taxonomy' => 'property_type', 'field' => 'slug', 'terms' => $property_type); }
 
-  if($architecture){ $args['tax_query'] = array(array('taxonomy' => 'architecture', 'field' => 'slug', 'terms' => $architecture)); }
+  if($lifestyle){ $all_variables[] = array('taxonomy' => 'lifestyle', 'field' => 'slug', 'terms' => $lifestyle); }
+
+  if($architecture){ $all_variables[] = array('taxonomy' => 'architecture', 'field' => 'slug', 'terms' => $architecture); }
+
+  if($price_range){ $all_variables[] = array('taxonomy' => 'price', 'field' => 'name', 'terms' => $price_range); }
+  
+  if($size_range){ $all_variables[] = array('taxonomy' => 'space', 'field' => 'name', 'terms' => $size_range); }
+
+  $args['tax_query'] = $all_variables;
+
 
   // THE QUERY
   $properties_query = new WP_Query( $args );
